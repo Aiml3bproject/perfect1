@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI FAQ Chatbot</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f2f2f2;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+width:420px;
+height:650px;
+background:#fff;
+border-radius:15px;
+box-shadow:0 0 15px rgba(0,0,0,.2);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+
+.header{
+background:#007BFF;
+color:white;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+#chatbox{
+flex:1;
+padding:15px;
+overflow-y:auto;
+background:#fafafa;
+}
+
+.message{
+margin:10px 0;
+display:flex;
+}
+
+.user{
+justify-content:flex-end;
+}
+
+.bot{
+justify-content:flex-start;
+}
+
+.bubble{
+max-width:75%;
+padding:10px 15px;
+border-radius:15px;
+font-size:15px;
+line-height:1.5;
+}
+
+.user .bubble{
+background:#007BFF;
+color:white;
+border-bottom-right-radius:3px;
+}
+
+.bot .bubble{
+background:#e5e5e5;
+color:#222;
+border-bottom-left-radius:3px;
+}
+
+.input-area{
+display:flex;
+padding:10px;
+background:white;
+border-top:1px solid #ddd;
+}
+
+#question{
+flex:1;
+padding:12px;
+font-size:16px;
+border:1px solid #ccc;
+border-radius:20px;
+outline:none;
+}
+
+button{
+margin-left:8px;
+padding:10px 15px;
+background:#007BFF;
+color:white;
+border:none;
+border-radius:20px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+#typing{
+display:none;
+padding:10px;
+font-style:italic;
+color:gray;
+}
+
+@media(max-width:500px){
+
+.container{
+width:100%;
+height:100vh;
+border-radius:0;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+🤖 AI FAQ Chatbot
+</div>
+
+<div id="chatbox">
+
+<div class="message bot">
+<div class="bubble">
+
+👋 Hello! Welcome to the AI FAQ Chatbot.
+
+</div>
+</div>
+
+<div id="typing">
+🤖 typing...
+</div>
+
+</div>
+
+<div class="input-area">
+
+<input
+type="text"
+id="question"
+placeholder="Type your question...">
+
+<button onclick="sendMessage()">
+Send
+</button>
+
+</div>
+
+<script>
+
+// Part 2 starts from here...
+
+// ===== FAQ DATABASE =====
+
+const faqs = {
+
+"hi":"👋 Hello! How can I help you today?",
+
+"hello":"😊 Hi! Nice to meet you.",
+
+"good morning":"🌞 Good Morning! Have a wonderful day!",
+
+"good afternoon":"☀️ Good Afternoon!",
+
+"good evening":"🌙 Good Evening!",
+
+"how are you":"😊 I'm doing great! Thanks for asking.",
+
+"thank you":"❤️ You're welcome. Happy to help!",
+
+"thanks":"😊 My pleasure. Keep learning!",
+
+"bye":"👋 Goodbye! Have a fantastic day.",
+
+"html":"📄 HTML (HyperText Markup Language) is used to create web pages.",
+
+"css":"🎨 CSS is used to style HTML pages.",
+
+"javascript":"💻 JavaScript makes web pages interactive.",
+
+"python":"🐍 Python is widely used for AI, Machine Learning and Web Development.",
+
+"java":"☕ Java is an object-oriented programming language.",
+
+"sql":"🗄 SQL is used to manage databases.",
+
+"react":"⚛ React is a JavaScript library for building user interfaces.",
+
+"ai":"🤖 Artificial Intelligence enables machines to learn and solve problems.",
+
+"machine learning":"📚 Machine Learning is a branch of AI where computers learn from data."
+
+};
+
+// ===== Add Chat Bubble =====
+
+function addMessage(text,type){
+
+let chat=document.getElementById("chatbox");
+
+let msg=document.createElement("div");
+
+msg.className="message "+type;
+
+msg.innerHTML="<div class='bubble'>"+text+"</div>";
+
+chat.insertBefore(msg,document.getElementById("typing"));
+
+chat.scrollTop=chat.scrollHeight;
+
+}
+
+// ===== Send Message =====
+
+function sendMessage(){
+
+let input=document.getElementById("question");
+
+let text=input.value.trim().toLowerCase();
+
+if(text=="") return;
+
+addMessage(input.value,"user");
+
+input.value="";
+
+document.getElementById("typing").style.display="block";
+
+setTimeout(function(){
+
+document.getElementById("typing").style.display="none";
+
+reply(text);
+
+},800);
+
+}
+
+//part 3
+
+// ===== Reply Function =====
+
+function reply(text){
+
+// Calculator
+if(/^[0-9+\-*/ ().]+$/.test(text)){
+
+try{
+
+let ans=eval(text);
+
+addMessage("🧮 Answer : "+ans,"bot");
+
+return;
+
+}catch(e){}
+
+}
+
+// Date
+if(text.includes("date")){
+
+let d=new Date();
+
+addMessage("📅 Today's Date : "+d.toDateString(),"bot");
+
+return;
+
+}
+
+// Time
+if(text.includes("time")){
+
+let d=new Date();
+
+addMessage("🕒 Current Time : "+d.toLocaleTimeString(),"bot");
+
+return;
+
+}
+
+// Motivation
+if(text.includes("sad") || text.includes("depressed")){
+
+addMessage("💖 Don't give up! Every challenge is an opportunity to learn and grow. You are stronger than you think! 🌈","bot");
+
+return;
+
+}
+
+if(text.includes("success")){
+
+addMessage("🚀 Success comes from consistency, hard work, and believing in yourself. Keep going!","bot");
+
+return;
+
+}
+
+// FAQ Search
+
+for(let key in faqs){
+
+if(text.includes(key)){
+
+addMessage(faqs[key],"bot");
+
+return;
+
+}
+
+}
+
+// Random Friendly Replies
+
+const replies=[
+
+"😊 That's an interesting question! Can you tell me more?",
+
+"🌟 Keep learning. Every question makes you smarter.",
+
+"🤖 I'm always happy to help you.",
+
+"💡 Try asking about HTML, CSS, JavaScript, Python, AI or SQL.",
+
+"😄 I'm still learning. Could you ask in a different way?",
+
+"🎯 Practice every day and you'll become an expert!"
+
+];
+
+let random=Math.floor(Math.random()*replies.length);
+
+addMessage(replies[random],"bot");
+
+}
+
+// Press Enter to Send
+
+document.getElementById("question").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+sendMessage();
+
+}
+
+});
+
+// part 4
+
+// ===== Clear Chat =====
+
+function clearChat(){
+
+let chat=document.getElementById("chatbox");
+
+chat.innerHTML=`
+<div class="message bot">
+<div class="bubble">
+👋 Hello! Chat cleared successfully.<br><br>
+😊 Ask me anything about HTML, CSS, JavaScript, Python, Java, SQL, AI or Machine Learning.
+</div>
+</div>
+
+<div id="typing" style="display:none;">
+🤖 Bot is typing...
+</div>
+`;
+
+}
+
+// ===== Copy Chat =====
+
+function copyChat(){
+
+let text=document.getElementById("chatbox").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("✅ Chat copied successfully.");
+
+}
+
+// ===== Voice Input =====
+
+function startVoice(){
+
+if(!('webkitSpeechRecognition' in window)){
+
+alert("Voice Recognition is not supported in your browser.");
+
+return;
+
+}
+
+let recognition=new webkitSpeechRecognition();
+
+recognition.lang="en-US";
+
+recognition.start();
+
+recognition.onresult=function(event){
+
+document.getElementById("question").value=
+
+event.results[0][0].transcript;
+
+sendMessage();
+
+};
+
+}
+
+// ===== Dark Mode =====
+
+let darkMode=false;
+
+function toggleDarkMode(){
+
+darkMode=!darkMode;
+
+if(darkMode){
+
+document.body.style.background="#121212";
+
+document.querySelector(".container").style.background="#222";
+
+document.querySelector(".header").style.background="#000";
+
+document.querySelector("#chatbox").style.background="#333";
+
+document.querySelector("#question").style.background="#555";
+
+document.querySelector("#question").style.color="white";
+
+}else{
+
+document.body.style.background="#f2f2f2";
+
+document.querySelector(".container").style.background="white";
+
+document.querySelector(".header").style.background="#007BFF";
+
+document.querySelector("#chatbox").style.background="#fafafa";
+
+document.querySelector("#question").style.background="white";
+
+document.querySelector("#question").style.color="black";
+
+}
+
+}
+
+// ===== Motivational Quotes =====
+
+const quotes=[
+
+"🌟 Believe in yourself.",
+
+"🚀 Success starts with one step.",
+
+"💪 Never stop learning.",
+
+"😊 Every day is a new opportunity.",
+
+"🏆 Hard work beats talent when talent doesn't work hard."
+
+];
+
+setInterval(function(){
+
+let random=Math.floor(Math.random()*quotes.length);
+
+console.log(quotes[random]);
+
+},10000);
+
+</script>
+
+</body>
+
+</html>
