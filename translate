@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Language Translation Tool</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#4facfe;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+}
+.container{
+    background:#fff;
+    width:500px;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.3);
+}
+h2{
+    text-align:center;
+}
+textarea{
+    width:100%;
+    height:120px;
+    padding:10px;
+    margin:10px 0;
+    font-size:16px;
+    resize:none;
+}
+.row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:10px 0;
+}
+select{
+    width:45%;
+    padding:10px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:5px;
+    font-size:18px;
+    cursor:pointer;
+}
+button:hover{
+    background:#0056b3;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>🌍 Language Translation Tool</h2>
+
+<textarea id="inputText" placeholder="Enter text..."></textarea>
+
+<div class="row">
+
+<select id="source">
+<option value="en">English</option>
+<option value="te">Telugu</option>
+<option value="hi">Hindi</option>
+<option value="ta">Tamil</option>
+<option value="fr">French</option>
+<option value="es">Spanish</option>
+</select>
+
+<span>➡</span>
+
+<select id="target">
+<option value="te">Telugu</option>
+<option value="en">English</option>
+<option value="hi">Hindi</option>
+<option value="ta">Tamil</option>
+<option value="fr">French</option>
+<option value="es">Spanish</option>
+</select>
+
+</div>
+
+<button onclick="translateText()">Translate</button>
+
+<h3>Translated Text</h3>
+
+<textarea id="outputText" readonly></textarea>
+
+</div>
+
+<script>
+
+async function translateText(){
+
+let text=document.getElementById("inputText").value;
+let source=document.getElementById("source").value;
+let target=document.getElementById("target").value;
+
+if(text==""){
+alert("Please enter text");
+return;
+}
+
+try{
+
+let url=`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodeURIComponent(text)}`;
+
+let response=await fetch(url);
+
+let data=await response.json();
+
+let translated="";
+
+for(let i=0;i<data[0].length;i++){
+translated+=data[0][i][0];
+}
+
+document.getElementById("outputText").value=translated;
+
+}catch(error){
+
+alert("Translation Failed");
+console.log(error);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
